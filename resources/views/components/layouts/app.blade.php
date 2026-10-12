@@ -45,7 +45,11 @@
     </header>
 
     <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        {{-- Kata 17.2 : le message flash (@session('status')) s'affiche ici, au-dessus du contenu de la page. --}}
+      @if (session('status'))
+    <div role="status" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        {{ session('status') }}
+    </div>
+@endif
 
         {{ $slot }}
     </main>
