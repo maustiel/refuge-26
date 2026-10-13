@@ -49,7 +49,14 @@
         <p id="description-error" class="text-red-500 text-sm mt-1">{{ $message }}</p>
     @enderror
 </div>
-
+<div>
+    <x-label for="photo">Photo</x-label>
+    <x-file-input name="photo" accept="image/*" />
+    <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Facultatif. Une image de 2 Mo au plus.</p>
+    @error('photo')
+        <p id="photo-error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+    @enderror
+</div>
 <fieldset class="mt-4">
     <legend class="text-sm font-medium mb-2">Traits de caractère</legend>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">

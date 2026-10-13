@@ -13,6 +13,8 @@ use App\Http\Requests\AnimalRequest;
 
 use App\Models\Tag;
 
+use Illuminate\Support\Facades\Storage;
+
 
 
 class AnimalController extends Controller
@@ -24,7 +26,7 @@ class AnimalController extends Controller
         $espece = $request->query('espece', '');
         $speciesEnum = Species::tryFrom($espece);
 
-        
+
         if ($speciesEnum) {
             $query->where('species', $speciesEnum);
         }
@@ -50,9 +52,15 @@ class AnimalController extends Controller
     public function store(AnimalRequest $request)
     {
         $validated = $request->validated();
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('animals', 'public');
+        }
+
         $animal = Animal::create($validated);
-        $animal->tags()->sync($validated['tags'] ?? []); // Synchronise les tags
-        return redirect()->route('animals.show', $animal->id)->with('status', "L'animal a été ajouté.");
+        $animal->tags()->sync($validated['tags'] ?? []);
+
+        return redirect()->route('animals.show', $animal->id)->with('status', 'L\'animal a été ajouté.');
     }
 
     public function edit(int $id)
@@ -68,9 +76,19 @@ class AnimalController extends Controller
     {
         $animal = Animal::findOrFail($id);
         $validated = $request->validated();
+
+        if ($request->hasFile('photo')) {
+            // L'ancienne photo est remplacée : on la supprime
+            if ($animal->photo !== null) {
+                Storage::disk('public')->delete($animal->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('animals', 'public');
+        }
+
         $animal->update($validated);
-        $animal->tags()->sync($validated['tags'] ?? []); // Synchronise les tags
-        return redirect()->route('animals.show', $animal->id)->with('status', "L'animal a été modifié.");
+        $animal->tags()->sync($validated['tags'] ?? []);
+
+        return redirect()->route('animals.show', $animal->id)->with('status', 'L\'animal a été modifié.');
     }
 
     public function adopt(int $id)
@@ -85,7 +103,14 @@ class AnimalController extends Controller
     public function destroy(int $id)
     {
         $animal = Animal::findOrFail($id);
+
+        // On supprime la photo du disque
+        if ($animal->photo !== null) {
+            Storage::disk('public')->delete($animal->photo);
+        }
+
         $animal->delete();
-        return redirect()->route('animals.index')->with('status', "L'animal a été supprimé.");
+
+        return redirect()->route('animals.index')->with('status', 'L\'animal a été supprimé.');
     }
 }

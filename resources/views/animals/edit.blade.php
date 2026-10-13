@@ -4,7 +4,7 @@
             <h1 class="text-2xl font-bold mb-4 text-center">Modifier {{ $animal->name }}</h1>
 
 
-            <form method="POST" action="{{ route('animals.update', $animal->id) }}">
+           <form method="POST" action="{{ route('animals.update', $animal->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

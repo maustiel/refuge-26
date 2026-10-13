@@ -21,6 +21,7 @@ class AnimalRequest extends FormRequest
             'shelter_id' => ['required', 'integer', 'exists:shelters,id'],
             'birth_date' => ['nullable', 'date', 'before_or_equal:today'],
             'description' => ['nullable', 'string', 'max:1000'],
+            'photo' => ['nullable', 'image', 'max:2048'], // Placée ici, bien séparée !
             'tags' => ['nullable', 'array'],
             'tags.*' => ['integer', 'exists:tags,id'],
         ];

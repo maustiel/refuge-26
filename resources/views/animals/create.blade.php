@@ -4,7 +4,7 @@
         <x-card class="p-6">
             <h1 class="text-2xl font-bold mb-4 text-center">Ajouter un animal</h1>
 
-            <form method="POST" action="{{ route('animals.store') }}">
+            <form method="POST" action="{{ route('animals.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <x-animal-fields :animal="$animal" :shelters="$shelters" :species="$species" :tags="$tags" />

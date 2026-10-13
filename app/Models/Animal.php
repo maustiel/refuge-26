@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-#[Fillable(['shelter_id', 'name', 'species', 'birth_date', 'description', 'adopted_at'])]
+#[Fillable(['shelter_id', 'name', 'species', 'birth_date', 'description', 'photo', 'adopted_at'])]
+
+
 class Animal extends Model
 {
     /** @use HasFactory<AnimalFactory> */
