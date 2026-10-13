@@ -14,11 +14,22 @@ use App\Http\Requests\AnimalRequest;
 use App\Models\Tag;
 
 
+
 class AnimalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $animals = Animal::whereNull('adopted_at')->orderBy('name')->get();
+        $query = Animal::whereNull('adopted_at')->orderBy('name');
+
+        $espece = $request->query('espece', '');
+        $speciesEnum = Species::tryFrom($espece);
+
+        
+        if ($speciesEnum) {
+            $query->where('species', $speciesEnum);
+        }
+
+        $animals = $query->get();
         return view('animals.index', ['animals' => $animals]);
     }
 
@@ -69,5 +80,12 @@ class AnimalController extends Controller
             $animal->update(['adopted_at' => today()]);
         }
         return redirect()->route('animals.show', $animal->id)->with('status', "{$animal->name} a trouvé une famille.");
+    }
+
+    public function destroy(int $id)
+    {
+        $animal = Animal::findOrFail($id);
+        $animal->delete();
+        return redirect()->route('animals.index')->with('status', "L'animal a été supprimé.");
     }
 }

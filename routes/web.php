@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\ShelterController;
+
 
 Route::redirect('/', '/animaux');
 
@@ -19,3 +21,7 @@ Route::put('/animaux/{id}', [AnimalController::class, 'update'])->whereNumber('i
 
 Route::patch('/animaux/{id}/adoption', [AnimalController::class, 'adopt'])->whereNumber('id')->name('animals.adopt');
 
+Route::delete('/animaux/{id}', [AnimalController::class, 'destroy'])->whereNumber('id')->name('animals.destroy');
+
+
+Route::get('/refuges/{id}', [ShelterController::class, 'show'])->whereNumber('id')->name('shelters.show');
